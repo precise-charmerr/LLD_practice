@@ -1,0 +1,13 @@
+Requirements:
+    1. End to end working solution
+    2. For storage, we have to maintain a DB (MySQL)
+    3. We should be exposing REST APIs for interacting with the system
+
+Functional requirements:
+    1. Users should be able to create group
+    2. Users should be able to create or be part of an expense where other group members are involved
+    3. To add an expense, we might equally split the expense among all, or there can be a percentage based split
+    4. Users are able to see the transactions required to be done for settling up a group
+    5. Support for history (Good to have)
+    6. Support for adding or removing users from group
+    7. Users should be able to get all their expenses
