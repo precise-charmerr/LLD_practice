@@ -3,6 +3,7 @@ package com.splitwise.demo.service;
 import com.splitwise.demo.dto.SigninRequest;
 import com.splitwise.demo.dto.SignupRequest;
 import com.splitwise.demo.exception.ResourceNotFoundException;
+import com.splitwise.demo.exception.UserAlreadyExistsException;
 import com.splitwise.demo.model.User;
 import com.splitwise.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class AuthService {
     // register user
     public void registerUser(SignupRequest signupRequest) {
         if(userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException("User already exists with this email");
         }
         User user = new User(signupRequest.getUsername(), signupRequest.getEmail(), signupRequest.getPassword());
         userRepository.save(user);

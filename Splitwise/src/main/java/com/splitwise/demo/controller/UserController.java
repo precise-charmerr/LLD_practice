@@ -1,5 +1,6 @@
 package com.splitwise.demo.controller;
 
+import com.splitwise.demo.dto.AddUserRequest;
 import com.splitwise.demo.dto.GroupCreateRequest;
 import com.splitwise.demo.dto.SigninRequest;
 import com.splitwise.demo.dto.SignupRequest;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api")
 public class UserController {
     private final AuthService authService;
     private final UserService userService;
@@ -19,21 +20,27 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/auth/signup")
     public ResponseEntity<String> signupUser(@RequestBody SignupRequest signupRequest) throws Exception {
         authService.registerUser(signupRequest);
         return ResponseEntity.ok("User signed up successfully");
     }
 
-    @PostMapping(path = "/signin")
+    @PostMapping(path = "/auth/signin")
     public ResponseEntity<String> signinUser(@RequestBody SigninRequest signinRequest) {
         authService.authenticateUser(signinRequest);
         return ResponseEntity.ok("User signed in successfully");
     }
 
-    @PostMapping(path = "/create-group")
+    @PostMapping(path = "/groups")
     public ResponseEntity<String> createGroup(@RequestBody GroupCreateRequest groupCreateRequest) {
         userService.addGroup(groupCreateRequest);
         return ResponseEntity.ok("group created successfully");
+    }
+
+    @PostMapping(path = "/groups/user")
+    public ResponseEntity<String> addUserToGroup(@RequestBody AddUserRequest addUserRequest) {
+        userService.addUserToGroup(addUserRequest);
+        return ResponseEntity.ok("User added in group successfully");
     }
 }

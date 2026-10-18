@@ -20,4 +20,24 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatusCode.valueOf(404));
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> userAlreadyExists(UserAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "User already exists in this group",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
+    }
+
+    @ExceptionHandler(GroupAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> groupAlreadyExists(GroupAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Group with this name already exists",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
+    }
 }

@@ -14,8 +14,12 @@ public class Group {
     @Column(nullable = false)
     private String groupName;
 
-    @Column(nullable = false)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "app_group_users",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users;
 
     // constructor
