@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: my-mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydatabase
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
+
+#COMMAND TO RUN FROM TERMINAL: docker run --name my-mysql-container -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=mydatabase -p 3306:3306 -d mysql:latest
+#COMMAND TO START CONTAINER: docker compose up
+#COMMAND TO STOP CONTAINER AS WELL AS DELETE CACHE FILES: docker compose down -v
+#COMMAND TO SEE DATABASE FROM TERMINAL: docker exec -it <mysql_container_name> mysql -u root -p
