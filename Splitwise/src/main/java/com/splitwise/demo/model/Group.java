@@ -1,7 +1,7 @@
 package com.splitwise.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_group")
@@ -20,13 +20,13 @@ public class Group {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> users;
+    private Set<User> users;
 
     // constructor
 
     public Group() {}
 
-    public Group(String groupName, List<User> users) {
+    public Group(String groupName, Set<User> users) {
         this.groupName = groupName;
         this.users = users;
     }
@@ -50,11 +50,23 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        return id.equals(((Group) obj).id);
     }
 }

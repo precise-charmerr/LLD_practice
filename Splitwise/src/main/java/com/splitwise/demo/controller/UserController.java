@@ -1,6 +1,6 @@
 package com.splitwise.demo.controller;
 
-import com.splitwise.demo.dto.AddUserRequest;
+import com.splitwise.demo.dto.UpdateGroupRequest;
 import com.splitwise.demo.dto.GroupCreateRequest;
 import com.splitwise.demo.dto.SigninRequest;
 import com.splitwise.demo.dto.SignupRequest;
@@ -38,9 +38,15 @@ public class UserController {
         return ResponseEntity.ok("group created successfully");
     }
 
-    @PostMapping(path = "/groups/user")
-    public ResponseEntity<String> addUserToGroup(@RequestBody AddUserRequest addUserRequest) {
-        userService.addUserToGroup(addUserRequest);
+    @PostMapping(path = "/groups/addUser")
+    public ResponseEntity<String> addUserToGroup(@RequestBody UpdateGroupRequest updateGroupRequest) {
+        userService.addUserToGroup(updateGroupRequest);
         return ResponseEntity.ok("User added in group successfully");
+    }
+
+    @PostMapping(path = "/groups/removeUser")
+    public ResponseEntity<String> removeUserFromGroup(@RequestBody UpdateGroupRequest updateGroupRequest) {
+        userService.removeUserFromGroup(updateGroupRequest);
+        return ResponseEntity.ok("User removed from group successfully");
     }
 }

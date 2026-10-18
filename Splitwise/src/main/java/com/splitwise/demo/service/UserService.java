@@ -1,6 +1,6 @@
 package com.splitwise.demo.service;
 
-import com.splitwise.demo.dto.AddUserRequest;
+import com.splitwise.demo.dto.UpdateGroupRequest;
 import com.splitwise.demo.dto.GroupCreateRequest;
 import com.splitwise.demo.exception.GroupAlreadyExistsException;
 import com.splitwise.demo.exception.ResourceNotFoundException;
@@ -13,8 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -33,24 +32,38 @@ public class UserService {
         if (existingGroup.isPresent()) {
             throw new GroupAlreadyExistsException("A group with this name already exists!");
         }
-        List<User> users = userRepository.findAllById(groupCreateRequest.getUsers());
+        Set<User> users = new HashSet<>(userRepository.findAllById(groupCreateRequest.getUsers()));
         Group group = new Group(groupCreateRequest.getGroupName(), users);
         groupRepository.save(group);
     }
 
     @Transactional
-    public void addUserToGroup(AddUserRequest addUserRequest) {
-        System.out.println("Given id is: " + addUserRequest.getUserId() + " " + addUserRequest.getGroup());
+    public void addUserToGroup(UpdateGroupRequest updateGroupRequest) {
         User user = userRepository
-                .findById(addUserRequest.getUserId())
+                .findById(updateGroupRequest.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("This user is not present currently!"));
         Group group = groupRepository
-                .findByGroupName(addUserRequest.getGroup())
+                .findByGroupName(updateGroupRequest.getGroup())
                 .orElseThrow(() -> new ResourceNotFoundException("This group is not present currently!"));
         if(group.getUsers().contains(user)) {
             throw new UserAlreadyExistsException("User already exists in this group!");
         }
         group.getUsers().add(user);
+        groupRepository.save(group);
+    }
+
+    @Transactional
+    public void removeUserFromGroup(UpdateGroupRequest updateGroupRequest) {
+        User user = userRepository
+                .findById(updateGroupRequest.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("This user is not present currently!"));
+        Group group = groupRepository
+                .findByGroupName(updateGroupRequest.getGroup())
+                .orElseThrow(() -> new ResourceNotFoundException("This group is not present currently!"));
+        if(!group.getUsers().contains(user)) {
+            throw new ResourceNotFoundException("User does exists in this group already!");
+        }
+        group.getUsers().remove(user);
         groupRepository.save(group);
     }
 }

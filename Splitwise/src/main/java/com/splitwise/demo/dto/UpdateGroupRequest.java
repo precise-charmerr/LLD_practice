@@ -1,14 +1,12 @@
 package com.splitwise.demo.dto;
 
-import com.splitwise.demo.model.User;
-
-public class AddUserRequest {
+public class UpdateGroupRequest {
     private String group;
     private Long userId;
 
-    public AddUserRequest() {}
+    public UpdateGroupRequest() {}
 
-    public AddUserRequest(String group, Long userId) {
+    public UpdateGroupRequest(String group, Long userId) {
         this.group = group;
         this.userId = userId;
     }
