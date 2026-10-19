@@ -69,4 +69,10 @@ public class UserController {
         List<SettlementTransaction> settlementTransactions = userService.saveSettlementEntries(groupName, debtRecordDoubleMap);
         return ResponseEntity.ok(settlementTransactions);
     }
+
+    @PostMapping(path = "/expense/paySettlement")
+    public ResponseEntity<String> paySettlement(@RequestBody PaymentSettlementRequest paymentSettlementRequest) {
+        userService.paySettlement(paymentSettlementRequest);
+        return ResponseEntity.ok("Payment done successfully!!");
+    }
 }

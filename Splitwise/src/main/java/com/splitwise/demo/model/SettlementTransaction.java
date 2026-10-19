@@ -19,7 +19,7 @@ public class SettlementTransaction {
     private Long toUserId;
 
     @Column(nullable = false)
-    private Double Amount;
+    private Double amount;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
@@ -32,7 +32,7 @@ public class SettlementTransaction {
         this.groupId = groupId;
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
-        Amount = amount;
+        this.amount = amount;
         this.status = status;
     }
 
@@ -71,11 +71,11 @@ public class SettlementTransaction {
     }
 
     public Double getAmount() {
-        return Amount;
+        return amount;
     }
 
     public void setAmount(Double amount) {
-        Amount = amount;
+        this.amount = amount;
     }
 
     public Status getStatus() {

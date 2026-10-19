@@ -160,6 +160,20 @@ public class UserService {
                 debtRecordTrack.put(debtRecord, debtRecordTrack.getOrDefault(debtRecord, 0.0) + expense.getAmount() * (expenseSplits1.getPercentage() / 100));
             }
         }
+
+        List<SettlementTransaction> paidTransactions = settlementRepository.findByGroupIdAndStatus(group.getId(), SettlementTransaction.Status.PAID);
+        for(SettlementTransaction paidTx: paidTransactions) {
+            DebtRecord debtRecord = new DebtRecord(paidTx.getFromUserId(), paidTx.getToUserId());
+            if(debtRecordTrack.containsKey(debtRecord)) {
+                double remainingDebt = debtRecordTrack.get(debtRecord) - paidTx.getAmount();
+                if(remainingDebt < 0.001) {
+                    debtRecordTrack.remove(debtRecord);
+                } else {
+                    debtRecordTrack.put(debtRecord, remainingDebt);
+                }
+            }
+        }
+
         return debtRecordTrack;
     }
 
@@ -197,5 +211,20 @@ public class UserService {
             settlementRepository.save(st);
         });
         return savedTransactions;
+    }
+
+    @Transactional
+    public void paySettlement(PaymentSettlementRequest paymentSettlementRequest) {
+        Group group = groupRepository
+                .findByGroupName(paymentSettlementRequest.groupName())
+                .orElseThrow(() -> new ResourceNotFoundException("This group does not exists!"));
+        SettlementTransaction st = settlementRepository.findByGroupIdAndFromUserIdAndToUserIdAndStatus(
+                group.getId(),
+                paymentSettlementRequest.fromUserId(),
+                paymentSettlementRequest.toUserId(),
+                SettlementTransaction.Status.PENDING
+        ).orElseThrow(() -> new ResourceNotFoundException("There is no pending settlement yet!"));
+        st.setStatus(SettlementTransaction.Status.PAID);
+        settlementRepository.save(st);
     }
 }
