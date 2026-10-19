@@ -1,9 +1,6 @@
 package com.splitwise.demo.controller;
 
-import com.splitwise.demo.dto.UpdateGroupRequest;
-import com.splitwise.demo.dto.GroupCreateRequest;
-import com.splitwise.demo.dto.SigninRequest;
-import com.splitwise.demo.dto.SignupRequest;
+import com.splitwise.demo.dto.*;
 import com.splitwise.demo.service.AuthService;
 import com.splitwise.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +46,22 @@ public class UserController {
         userService.removeUserFromGroup(updateGroupRequest);
         return ResponseEntity.ok("User removed from group successfully");
     }
+
+    @PostMapping(path = "/expense/addExpense")
+    public ResponseEntity<String> addExpenseToGroup(@RequestBody ExpenseRequest expenseRequest) {
+        userService.addExpenseToGroup(expenseRequest);
+        return ResponseEntity.ok("Expense added to group successfully");
+    }
+
+//    @PostMapping(path = "/expense/updateExpense")
+//    public ResponseEntity<String> UpdateExpense(@RequestBody ExpenseRequest expenseRequest) {
+//        userService.addExpenseToGroup(expenseRequest);
+//        return ResponseEntity.ok("Expense added to group successfully");
+//    }
+
+//    @PostMapping(path = "/expense/deleteExpense")
+//    public ResponseEntity<String> deleteExpense(@RequestBody ExpenseRequest expenseRequest) {
+//        userService.addExpenseToGroup(expenseRequest);
+//        return ResponseEntity.ok("Expense added to group successfully");
+//    }
 }

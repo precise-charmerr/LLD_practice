@@ -40,4 +40,14 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
     }
+
+    @ExceptionHandler(ExpenseAlreayExistsException.class)
+    public ResponseEntity<ErrorResponse> expenseAlreadyExists(ExpenseAlreayExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Expense with this name already exists",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
+    }
 }
