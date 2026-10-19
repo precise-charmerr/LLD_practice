@@ -2,21 +2,32 @@ package com.splitwise.demo.dto;
 
 import java.util.List;
 
-public class ExpenseRequest {
+public class AddExpenseRequest {
+    private Long paidByUserId;
     private String groupName;
     private String expenseName;
     private List<Long> userIds;
     private Double amount;
     private List<Double> percent;
 
-    public ExpenseRequest() {}
+    public AddExpenseRequest() {}
 
-    public ExpenseRequest(String groupName, List<Long> userIds, Double amount, List<Double> percent, String expenseName) {
+    public AddExpenseRequest(Long paidByUserId, String groupName, List<Long> userIds,
+                             Double amount, List<Double> percent, String expenseName) {
+        this.paidByUserId = paidByUserId;
         this.groupName = groupName;
         this.userIds = userIds;
         this.amount = amount;
         this.percent = percent;
         this.expenseName = expenseName;
+    }
+
+    public Long getPaidByUserId() {
+        return paidByUserId;
+    }
+
+    public void setPaidByUserId(Long paidByUserId) {
+        this.paidByUserId = paidByUserId;
     }
 
     public String getGroupName() {

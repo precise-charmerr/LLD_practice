@@ -1,6 +1,5 @@
 package com.splitwise.demo.model;
 
-import com.splitwise.demo.dto.ExpenseRequest;
 import jakarta.persistence.*;
 
 @Entity

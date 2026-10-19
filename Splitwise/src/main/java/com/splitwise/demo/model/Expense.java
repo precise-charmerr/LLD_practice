@@ -20,20 +20,42 @@ public class Expense {
     @Column(nullable = false)
     private Long groupId;
 
+    @Column(nullable = false)
+    private Long paidByUserId;
+
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ExpenseSplits> expenseSplits;
 
     // constructors
     public Expense() {}
 
-    public Expense(String expenseName, Long groupId, Set<ExpenseSplits> expenseSplits, Double amount) {
+    public Expense(Long paidByUserId, String expenseName, Long groupId,
+                   Set<ExpenseSplits> expenseSplits, Double amount) {
+        this.paidByUserId = paidByUserId;
         this.expenseName = expenseName;
         this.groupId = groupId;
         this.expenseSplits = expenseSplits;
         this.amount = amount;
     }
 
+    public void printData() {
+        System.out.println("Id: " + id +
+                " paidByUserId: " + paidByUserId +
+                " expenseName: " + expenseName +
+                " groupId: " + groupId +
+                " amount: " + amount);
+    }
+
     // getters and setters
+
+
+    public Long getPaidByUserId() {
+        return paidByUserId;
+    }
+
+    public void setPaidByUserId(Long paidByUserId) {
+        this.paidByUserId = paidByUserId;
+    }
 
     public Long getId() {
         return id;

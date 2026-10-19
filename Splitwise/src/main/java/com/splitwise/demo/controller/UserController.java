@@ -6,6 +6,8 @@ import com.splitwise.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -48,20 +50,20 @@ public class UserController {
     }
 
     @PostMapping(path = "/expense/addExpense")
-    public ResponseEntity<String> addExpenseToGroup(@RequestBody ExpenseRequest expenseRequest) {
-        userService.addExpenseToGroup(expenseRequest);
+    public ResponseEntity<String> addExpenseToGroup(@RequestBody AddExpenseRequest addExpenseRequest) {
+        userService.addExpenseToGroup(addExpenseRequest);
         return ResponseEntity.ok("Expense added to group successfully");
     }
 
-//    @PostMapping(path = "/expense/updateExpense")
-//    public ResponseEntity<String> UpdateExpense(@RequestBody ExpenseRequest expenseRequest) {
-//        userService.addExpenseToGroup(expenseRequest);
-//        return ResponseEntity.ok("Expense added to group successfully");
-//    }
+    @PostMapping(path = "/expense/deleteExpense")
+    public ResponseEntity<String> deleteExpense(@RequestBody DeleteExpenseRequest deleteExpenseRequest) {
+        userService.deleteExpense(deleteExpenseRequest);
+        return ResponseEntity.ok("Expense deleted from group successfully");
+    }
 
-//    @PostMapping(path = "/expense/deleteExpense")
-//    public ResponseEntity<String> deleteExpense(@RequestBody ExpenseRequest expenseRequest) {
-//        userService.addExpenseToGroup(expenseRequest);
-//        return ResponseEntity.ok("Expense added to group successfully");
-//    }
+    @PostMapping(path = "/expense/settleTransaction")
+    public ResponseEntity<Map<Long, Double>> settleTransaction(@RequestBody TransactionSettlementRequest transactionSettlementRequest) {
+        Map<Long, Double> settleRecord = userService.settleTransaction(transactionSettlementRequest);
+        return ResponseEntity.ok(settleRecord);
+    }
 }
