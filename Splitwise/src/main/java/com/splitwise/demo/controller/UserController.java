@@ -1,11 +1,13 @@
 package com.splitwise.demo.controller;
 
 import com.splitwise.demo.dto.*;
+import com.splitwise.demo.model.SettlementTransaction;
 import com.splitwise.demo.service.AuthService;
 import com.splitwise.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -61,9 +63,10 @@ public class UserController {
         return ResponseEntity.ok("Expense deleted from group successfully");
     }
 
-    @PostMapping(path = "/expense/settleTransaction")
-    public ResponseEntity<Map<Long, Double>> settleTransaction(@RequestBody TransactionSettlementRequest transactionSettlementRequest) {
-        Map<Long, Double> settleRecord = userService.settleTransaction(transactionSettlementRequest);
-        return ResponseEntity.ok(settleRecord);
+    @PostMapping(path = "/expense/settleTransaction/{groupName}")
+    public ResponseEntity<List<SettlementTransaction>> settleTransaction(@PathVariable String groupName) {
+        Map<DebtRecord, Double> debtRecordDoubleMap = userService.settleTransaction(groupName);
+        List<SettlementTransaction> settlementTransactions = userService.saveSettlementEntries(groupName, debtRecordDoubleMap);
+        return ResponseEntity.ok(settlementTransactions);
     }
 }

@@ -4,12 +4,10 @@ import com.splitwise.demo.dto.*;
 import com.splitwise.demo.exception.GroupAlreadyExistsException;
 import com.splitwise.demo.exception.ResourceNotFoundException;
 import com.splitwise.demo.exception.UserAlreadyExistsException;
-import com.splitwise.demo.model.Expense;
-import com.splitwise.demo.model.ExpenseSplits;
-import com.splitwise.demo.model.Group;
-import com.splitwise.demo.model.User;
+import com.splitwise.demo.model.*;
 import com.splitwise.demo.repository.ExpenseRepository;
 import com.splitwise.demo.repository.GroupRepository;
+import com.splitwise.demo.repository.SettlementRepository;
 import com.splitwise.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,12 +22,16 @@ public class UserService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
+    private final SettlementRepository settlementRepository;
 
     public UserService(GroupRepository groupRepository,
-                       UserRepository userRepository, ExpenseRepository expenseRepository) {
+                       UserRepository userRepository,
+                       ExpenseRepository expenseRepository,
+                       SettlementRepository settlementRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.expenseRepository = expenseRepository;
+        this.settlementRepository = settlementRepository;
     }
 
     @Transactional
@@ -139,9 +141,9 @@ public class UserService {
     }
 
     @Transactional
-    public Map<Long, Double> settleTransaction(TransactionSettlementRequest transactionSettlementRequest) {
+    public Map<DebtRecord, Double> settleTransaction(String groupName) {
         Group group = groupRepository
-                .findByGroupName(transactionSettlementRequest.getGroupName())
+                .findByGroupName(groupName)
                 .orElseThrow(() -> new ResourceNotFoundException("This group does not exist in system yet!"));
         List<Expense> expenseInGroup = expenseRepository.findAllByGroupId(group.getId());
         if(expenseInGroup.isEmpty()) {
@@ -158,14 +160,42 @@ public class UserService {
                 debtRecordTrack.put(debtRecord, debtRecordTrack.getOrDefault(debtRecord, 0.0) + expense.getAmount() * (expenseSplits1.getPercentage() / 100));
             }
         }
-        Map<Long, Double> settlement = new HashMap<>();
-        debtRecordTrack.forEach((record, amount) -> {
-            if(Objects.equals(record.fromUserId(), transactionSettlementRequest.getUserId())) {
-                settlement.put(record.toUserId(), settlement.getOrDefault(record.toUserId(), 0.0) - amount);
-            } else if(Objects.equals(record.toUserId(), transactionSettlementRequest.getUserId())) {
-                settlement.put(record.fromUserId(), settlement.getOrDefault(record.fromUserId(), 0.0) + amount);
+        return debtRecordTrack;
+    }
+
+    @Transactional
+    public List<SettlementTransaction> saveSettlementEntries(String groupName,
+                                      Map<DebtRecord, Double> debtRecordDoubleMap) {
+        Group group = groupRepository
+                .findByGroupName(groupName)
+                .orElseThrow(() -> new ResourceNotFoundException("This group does not exist"));
+        List<SettlementTransaction> savedTransactions = new ArrayList<>();
+        debtRecordDoubleMap.forEach((debtRecord, amount) -> {
+            Optional<SettlementTransaction> existingTransaction = settlementRepository
+                    .findByGroupIdAndFromUserIdAndToUserIdAndStatus(
+                    group.getId(),
+                    debtRecord.fromUserId(),
+                    debtRecord.toUserId(),
+                    SettlementTransaction.Status.PENDING
+            );
+            SettlementTransaction st;
+            if(existingTransaction.isPresent()) {
+                st = existingTransaction.get();
+                st.setAmount(amount);
+                settlementRepository.save(st);
+            } else {
+                st = new SettlementTransaction(
+                        group.getId(),
+                        debtRecord.fromUserId(),
+                        debtRecord.toUserId(),
+                        amount,
+                        SettlementTransaction.Status.PENDING
+                );
+
             }
+            savedTransactions.add(st);
+            settlementRepository.save(st);
         });
-        return settlement;
+        return savedTransactions;
     }
 }
