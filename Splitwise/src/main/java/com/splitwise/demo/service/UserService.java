@@ -227,4 +227,17 @@ public class UserService {
         st.setStatus(SettlementTransaction.Status.PAID);
         settlementRepository.save(st);
     }
+
+    @Transactional
+    public List<ExpenseHistoryDto> userHistory(Long userId) {
+        List<Expense> expenses = expenseRepository.findAllExpensesByUser(userId);
+
+        return expenses.stream()
+                .map(e -> new ExpenseHistoryDto(
+                        e.getId(),
+                        e.getAmount(),
+                        e.getPaidByUserId()
+                ))
+                .collect(Collectors.toList());
+    }
 }

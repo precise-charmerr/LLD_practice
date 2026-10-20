@@ -1,6 +1,7 @@
 package com.splitwise.demo.controller;
 
 import com.splitwise.demo.dto.*;
+import com.splitwise.demo.model.Expense;
 import com.splitwise.demo.model.SettlementTransaction;
 import com.splitwise.demo.service.AuthService;
 import com.splitwise.demo.service.UserService;
@@ -74,5 +75,11 @@ public class UserController {
     public ResponseEntity<String> paySettlement(@RequestBody PaymentSettlementRequest paymentSettlementRequest) {
         userService.paySettlement(paymentSettlementRequest);
         return ResponseEntity.ok("Payment done successfully!!");
+    }
+
+    @PostMapping(path = "/userHistory/{userId}")
+    public ResponseEntity<List<ExpenseHistoryDto>> userHistory(@PathVariable Long userId) {
+        List<ExpenseHistoryDto> expenseHistoryDtos = userService.userHistory(userId);
+        return ResponseEntity.ok(expenseHistoryDtos);
     }
 }
