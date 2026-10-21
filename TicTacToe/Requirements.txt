@@ -1,0 +1,17 @@
+Design a tic-tac-toe game
+
+Requirements:
+1. The board - N * N size and symbols would be X or O
+2. There should be two human users.
+3. The win conditions should be either complete row, column or
+    diagonal should be occupied with one symbol.
+4. Validations should be done
+    * Check if one box is filled, don't overwrite it.
+    * Turns should be one after another.
+    * Out of bound validations should be done as well.
+    * If game is already draw state, don't make any more move.
+
+Entities:
+1. Board - board state, Game state(Complete/draw/running),
+    checking any state of board responsibilities.
+2. User - Symbol/Name.
