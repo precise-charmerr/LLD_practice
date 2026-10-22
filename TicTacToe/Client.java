@@ -9,6 +9,10 @@ enum GAME_STATE {
     DRAW, RUNNING, WON
 }
 
+enum PlayerType {
+    HUMAN, BOT
+}
+
 record Cell(int row, int col) {}
 abstract class Player {
     private final String name;
@@ -27,7 +31,7 @@ abstract class Player {
         return symbol;
     }
 
-    public abstract Cell getNextMove();
+    public abstract Cell getNextMove(Board board);
 }
 
 class HumanPlayer extends Player {
@@ -38,11 +42,30 @@ class HumanPlayer extends Player {
     }
 
     @Override
-    public Cell getNextMove() {
+    public Cell getNextMove(Board board) {
         int row = scanner.nextInt();
         int col = scanner.nextInt();
 
         return new Cell(row, col);
+    }
+}
+
+class BotPlayer extends Player {
+    public BotPlayer(String name, Symbol symbol) {
+        super(name, symbol);
+    }
+
+    @Override
+    public Cell getNextMove(Board board) {
+        int n = board.getBoardSize();
+        for(int i = 0;i<n;i++) {
+            for(int j = 0;j<n;j++) {
+                if(board.isCellEmpty(i, j)) {
+                    return new Cell(i, j);
+                }
+            }
+        }
+        return null;
     }
 }
 
@@ -97,15 +120,23 @@ class Board {
         return rowCount || colCount || (x==y && leftDiagonalCount) ||
                 (rightDiagonalCount && (x+y==n-1));
     }
+
+    public int getBoardSize() {
+        return n;
+    }
+
+    public boolean isCellEmpty(int x, int y) {
+        return board[x][y] == null;
+    }
 }
 
 class Game {
     private Board board;
     private List<Player> users;
 
-    public Game(int boardSize, List<Player> users) {
-        this.users = users;
-        board = new Board(boardSize);
+    private Game(Builder builder) {
+        this.users = builder.players;
+        board = new Board(builder.boardSize);
     }
 
     public void gameStart() {
@@ -117,7 +148,7 @@ class Game {
 
             boolean valid = false;
             while(!valid) {
-                Cell move = currentPlayer.getNextMove();
+                Cell move = currentPlayer.getNextMove(board);
                 valid = board.makeMove(move.row(), move.col(), currentPlayer.getSymbol());
             }
 
@@ -133,16 +164,56 @@ class Game {
             playerPosition = (playerPosition + 1) % users.size();
         }
     }
+
+    public static class Builder {
+        private int boardSize = 3;
+        private List<Player> players = new ArrayList<>();
+
+        public Builder setBoardSize(int boardSize) {
+            this.boardSize = boardSize;
+            return this;
+        }
+
+        public Builder addPlayer(Player player) {
+            players.add(player);
+            return this;
+        }
+
+        public Game build() {
+            if(boardSize < 3) {
+                throw new RuntimeException("Board size cant be any less than 3");
+            }
+            if(players.size() < 2) {
+                throw  new RuntimeException("We need atleast two players to start the game!");
+            }
+            return new Game(this);
+        }
+    }
+}
+
+class PlayerFactory {
+    public static Player createPlayer(String name, Symbol symbol,
+                                      Scanner scanner, PlayerType playerType) {
+        switch (playerType) {
+            case HUMAN:
+                return new HumanPlayer(name, symbol, scanner);
+            case BOT:
+                return new BotPlayer(name, symbol);
+            default:
+                throw new RuntimeException("Unsupported Player Type!");
+        }
+    }
 }
 
 public class Client {
     public static void main(String[] args) {
         // Initializations
-        List<Player> player = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
-        player.add(new HumanPlayer("Priya", Symbol.X, scanner));
-        player.add(new HumanPlayer("Amit", Symbol.O, scanner));
-        Game game = new Game(3, player);
+        Game game = new Game.Builder()
+                .setBoardSize(3)
+                .addPlayer(PlayerFactory.createPlayer("Priya", Symbol.X, scanner, PlayerType.HUMAN))
+                .addPlayer(PlayerFactory.createPlayer("Amit", Symbol.O, scanner, PlayerType.HUMAN))
+                .build();
 
         //Game starts
         game.gameStart();
