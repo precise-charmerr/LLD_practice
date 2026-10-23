@@ -1,0 +1,68 @@
+1. Games & Simulations
+    Tic-Tac-Toe Game
+    Snake and Ladder Game
+    Chess Game
+    Tetris Game
+    Minesweeper
+    2048 Game
+
+2. Hardware, Devices & Machines
+    Vending Machine
+    ATM Machine
+    Elevator / Lift System
+    Jackpot Machine
+
+3. Systems, Utilities & Libraries
+    Logging Library (like Log4j)
+    File System / In-Memory File System
+    JSON Parser
+    Alarm / Alert Service for AWS
+    Internet Download Manager (IDM)
+    Sublime Text IDE
+    Ngrok Tool
+    Rate Limiter
+    Thread Pool
+    Bar Graph Library
+
+4. Booking, Hospitality & Travel Systems
+    Movie Ticket Booking System
+    Hotel Management System
+    Airline Management System
+    Car Rental System
+    Parking Lot
+    Ride-Sharing Service (like Uber/Ola)Google Maps
+
+5. Social Media, Communication & Content Platforms
+    Twitter / X
+    WhatsApp Messenger
+    Gmail
+    Stack Overflow
+    Cricinfo (Live Cricket Commentary & Stats)
+    Tinder Dating App
+    Amazon Prime Video / Video Streaming App
+    Music Streaming Service (like Spotify)
+    Music Recognition System (Audio Fingerprinting)
+    Google Authenticator
+
+6. E-Commerce, Fintech & Productivity Apps
+    Splitwise (Expense Sharing App)Restaurant Management System
+    Online Food Ordering & Delivery (like Zomato/Swiggy)
+    Inventory Management System
+    Online Book Management System
+    Coupon System (for Zepto/E-commerce)
+    Cryptocurrency Exchange Platform
+    Collaborative Document Editing (Google Docs)
+    Zoom (Video Conferencing App)
+    Peer-to-Peer File Sharing (BitTorrent)
+    Dropbox (File Sharing System)
+    Online Voting System
+    Web Crawler
+    Newsletter Service
+    Pair Programming Platform (like HackerRank CodePair)
+    Topmate / Mentorship Platform (like Preplaced)
+    Game Engine (like Unreal)
+    Android Unlock Pattern
+    Alexa
+    LinkedIn
+    Load Balancer
+    NoSQL Database
