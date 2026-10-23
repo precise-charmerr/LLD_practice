@@ -1,0 +1,18 @@
+Design a snake and ladder game.
+
+Requirements:
+Entities:
+    1. The board should be ideally 100 size(it should be configurable).
+    2. The dice should be there, ideally 6 size(but can be configurable also).
+    3. Entities: Board, dice, snakes & ladders, users
+    4. Multiple users and multiple snakes & ladders should be supported.
+Game rules:
+    1. Snakes and ladder should be unique.
+    2. Two users can't stay on same place.
+    3. Thrice 6 is not allowed, the third time should be neglected.
+    4. When game is about to complete, we need to check full completion
+        i.e. is user is at 96, they would need exact 4 to proceed,
+        anything greater than that would be ignored.
+
+Non-Functional requirements:
+    1. Rules should be extendable.
