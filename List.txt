@@ -1,6 +1,6 @@
 1. Games & Simulations
-    Tic-Tac-Toe Game
-    Snake and Ladder Game
+    Tic-Tac-Toe Game                        done
+    Snake and Ladder Game                   done
     Chess Game
     Tetris Game
     Minesweeper
@@ -13,7 +13,7 @@
     Jackpot Machine
 
 3. Systems, Utilities & Libraries
-    Logging Library (like Log4j)
+    Logging Library (like Log4j)             current
     File System / In-Memory File System
     JSON Parser
     Alarm / Alert Service for AWS
